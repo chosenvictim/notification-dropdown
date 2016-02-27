@@ -1,5 +1,5 @@
 {
-  "name": "random-notificaion-generator-using-pull-mechanism",
+  "name": "noti",
   "version": "1.0.0",
   "description": "Random notification generator using pull mechanism",
   "main": "server.js",
@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
-    "mysql": "^2.10.2"
+    "mysql": "^2.10.2",
+    "socket.io": "^1.4.5"
   }
 }
