@@ -1,0 +1,20 @@
+{
+  "name": "random-notificaion-generator-using-pull-mechanism",
+  "version": "1.0.0",
+  "description": "Random notification generator using pull mechanism",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "random-notifications-tab",
+    "client-polling"
+  ],
+  "author": "Shekhar Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4",
+    "mysql": "^2.10.2"
+  }
+}
