@@ -4,10 +4,10 @@ $(document).ready(function() {
     var unreadCount = 0;
 
     var addNotiItem = function(noti) {
-        var childItem = $('<li>').attr(
-                            { 'data-notiId', noti.notiId },
-                            { 'class', 'noti-text' }
-                        ).append("Shekhar commented on " + noti.notiData);
+        var childItem = $('<li>').attr({
+                            'data-notiId': noti.notiId,
+                            'class': 'noti-text'
+                        }).append("Shekhar commented on " + noti.notiData);
         childItem = Array.prototype.slice.call(childItem);
         $('.noti-body').prepend(childItem);
     }
@@ -25,6 +25,7 @@ $(document).ready(function() {
         $.ajax({
             url         : "http://localhost:4000/getNotifications",
             method      : 'GET',
+            dataType    : 'json',
             success     : function(notiList) {
                 for(var i=0; i<notiList.length; i++) {
                     addNotiItem(notiList[i]);
@@ -55,6 +56,8 @@ $(document).ready(function() {
             }
         });
     }
+
+    getNotifications();
 
     socket.on('newNotificationAdded', function(noti) {
         addNotiItem(noti);

@@ -1,0 +1,7 @@
+{
+    "PORT"     : 4000,
+    "HOST"     : "localhost",
+    "DB_USER"  : "shekWork",
+    "DB_PASSWD": "passwd",
+    "DB_NAME"  : "notification_db"
+}

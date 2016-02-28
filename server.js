@@ -1,15 +1,17 @@
 var express = require("express");
+var app     = express();
 var mysql   = require("mysql");
+var http    = require("http").Server(app);
 var socket  = require("socket.io")(http);
+var config  = require("./config/config.js");
 
 var connection = mysql.createConnection({
-    host    : 'localhost',
-    user    : 'shekWork', //name of your mysql db
-    password: 'passwd', //password of your mysql db
-    database: 'notification_db' //name of the database for that user
+    host    : config.get("HOST"),
+    user    : config.get("DB_USER"), //name of your mysql db
+    password: config.get("DB_PASSWD"), //password of your mysql db
+    database: config.get("DB_NAME") //name of the database for that user
 });
 
-var app = express();
 var notiId = 2;
 
 connection.connect(function(err) {
@@ -49,7 +51,8 @@ app.get("/", function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get("/updateNotificationCount", function(req, res) {
+app.get("/getNotifications", function(req, res) {
+    console.log("/getNotifications");
     connection.query('SELECT * from noti', function(err, rows) {
         if(!err) {
             console.log('Output of query: ', rows);
@@ -62,7 +65,8 @@ app.get("/updateNotificationCount", function(req, res) {
     });
 });
 
-app.get("/setNotificationCount", function(req, res) {
+app.get("/updateNotificationCount", function(req, res) {
+    console.log("/updateNotificationCount");
     connection.query('UPDATE noti SET unread = 0 where notiId = ?', req.notiId, function(err, row) {
         if(!err) {
             console.log('Updated table..');
@@ -74,5 +78,7 @@ app.get("/setNotificationCount", function(req, res) {
     });
 });
 
-app.listen(4000);
-console.log("Server is running at: http://localhost:4000");
+http.listen(config.get('PORT'), function() {
+    console.log("Server is running at: http://localhost:4000");
+});
+

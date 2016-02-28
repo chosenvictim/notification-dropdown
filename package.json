@@ -15,7 +15,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
+    "http": "0.0.0",
     "mysql": "^2.10.2",
+    "nconf": "^0.8.4",
     "socket.io": "^1.4.5"
   }
 }
