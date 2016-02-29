@@ -1,9 +1,12 @@
-var express = require("express");
-var app     = express();
-var mysql   = require("mysql");
-var http    = require("http").Server(app);
-var socket  = require("socket.io")(http);
-var config  = require("./config/config.js");
+var express     = require("express");
+var bodyParser  = require("body-parser");
+var app         = express();
+var mysql       = require("mysql");
+var http        = require("http").Server(app);
+var socket      = require("socket.io")(http);
+var respTime    = require("response-time");
+var statsD      = require("node-statsd");
+var config      = require("./config/config.js");
 
 var connection = mysql.createConnection({
     host    : config.get("HOST"),
@@ -16,10 +19,10 @@ var notiId = 2;
 
 connection.connect(function(err) {
     if(!err) {
-        console.log("Database is connected...");
+        console.log("Database is connected !!");
 
         socket.on('connection', function(sock) {
-            console.log("Socket connected..");
+            console.log("Client Socket connected !!");
             (function loop() {
                 var rand = Math.round(Math.random() * 10000) + 5000; //Generate random number between 5 sec to 10 sec
                 setTimeout(function() {
@@ -34,7 +37,7 @@ connection.connect(function(err) {
 });
 
 var insertIntoDb = function(notiData) {
-    var post = { notiId: notiId++, notiData: notiData };
+    var post = { notiId: notiId++, notiData: notiData, unread: 1 };
     connection.query('INSERT INTO noti SET ?', post, function(err, result) {
         if(!err) {
             console.log(new Date() + " : Row inserted");
@@ -47,15 +50,23 @@ var insertIntoDb = function(notiData) {
 
 app.use(express.static(__dirname + '/public'));
 
+//configuring body-parser to be used as middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+var stats = new statsD();
+app.use(respTime(function(req, res, time) {
+    var stat = (req.method + req.url).toLowerCase().replace(/[:\.]/g, '').replace(/\//g, '_');
+    stats.timing(stat, time);
+}));
+
 app.get("/", function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
 app.get("/getNotifications", function(req, res) {
-    console.log("/getNotifications");
     connection.query('SELECT * from noti', function(err, rows) {
         if(!err) {
-            console.log('Output of query: ', rows);
             res.json(rows);
         } else {
             console.log(err);
@@ -65,20 +76,20 @@ app.get("/getNotifications", function(req, res) {
     });
 });
 
-app.get("/updateNotificationCount", function(req, res) {
-    console.log("/updateNotificationCount");
-    connection.query('UPDATE noti SET unread = 0 where notiId = ?', req.notiId, function(err, row) {
+app.put("/updateNotificationCount", function(req, res) {
+    connection.query('UPDATE noti SET unread = 0 where notiId = ?', req.body.notiId, function(err, row) {
         if(!err) {
-            console.log('Updated table..');
+            console.log('Updated notification count !!');
+            res.json({"code": 200, "status": "OK"});
         } else {
             console.log(err);
             res.json({"code" : err.code, "status": err.status});
-            return;
         }
+        return;
     });
 });
 
 http.listen(config.get('PORT'), function() {
-    console.log("Server is running at: http://localhost:4000");
+    console.log("Server is running at: http://" + config.get('HOST') + ":" + config.get('PORT') + " ...");
 });
 

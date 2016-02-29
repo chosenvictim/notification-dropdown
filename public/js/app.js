@@ -5,9 +5,12 @@ $(document).ready(function() {
 
     var addNotiItem = function(noti) {
         var childItem = $('<li>').attr({
-                            'data-notiId': noti.notiId,
+                            'data-notiid': noti.notiId,
                             'class': 'noti-text'
                         }).append("Shekhar commented on " + noti.notiData);
+        if(!noti.unread) {
+            $(childItem).addClass('has-read');
+        }
         childItem = Array.prototype.slice.call(childItem);
         $('.noti-body').prepend(childItem);
     }
@@ -24,7 +27,7 @@ $(document).ready(function() {
     var getNotifications = function() {
         $.ajax({
             url         : "http://localhost:4000/getNotifications",
-            method      : 'GET',
+            type        : 'GET',
             dataType    : 'json',
             success     : function(notiList) {
                 for(var i=0; i<notiList.length; i++) {
@@ -40,11 +43,12 @@ $(document).ready(function() {
     }
 
     var updateNotificationCount = function(currentTarget) {
-        unreadCount--;
+        var notiId = $(currentTarget).data('notiid');
         $.ajax({
-            url     : "http://localhost:4000/updateNotificationCount",
-            method  : 'PUT',
-            data    : currentTarget.data('notiId'),
+            url         : "http://localhost:4000/updateNotificationCount",
+            type        : 'PUT',
+            data        : JSON.stringify({notiId: notiId}),
+            contentType : 'application/json',
             success : function() {
                 unreadCount--;
                 if(unreadCount == 0) {
@@ -52,7 +56,7 @@ $(document).ready(function() {
                 } else {
                     $('.noti-count').html(unreadCount);
                 }
-                $currentTarget.addClass('has-read');
+                $(currentTarget).addClass('has-read');
             }
         });
     }
@@ -65,13 +69,14 @@ $(document).ready(function() {
         setUnreadCount();
     });
 
-    $('#noti-tab').click(function() {
-        notiTabOpened = true;
+    $('#noti-tab').click(function(evt) {
+        evt.stopPropagation();
+        notiTabOpened = notiTabOpened ? false : true;
         if(unreadCount) {
             $('#nav-noti-count').fadeOut('slow');
             $('.noti-title').css('display', 'inline-block');
         }
-        $('.noti-container').slideToggle(300);
+        $('.noti-container').slideToggle(400);
     });
 
     $('#box-container').click(function() {
@@ -84,18 +89,11 @@ $(document).ready(function() {
         return false;
     });
 
-    $('.noti-body .noti-text').on('click', function(evt) {
+    $('.noti-body').on('click', 'li.noti-text', function(evt) {
         evt.stopPropagation();
-        if(!$(evt.currentTarget).hasClass('has-read')) {
-            updateNotificationCount($(evt.currentTarget));
+        if(! ($(evt.currentTarget).hasClass('has-read')) ) {
+            updateNotificationCount(evt.currentTarget);
         }
     });
-
-    // $('.noti-footer').click(function() {
-    //     unreadCount = 0;
-    //     window.localStorage.setItem('unreadCount', unreadCount);
-    //     $('.noti-title').hide();
-    //     $('.noti-text').addClass('has-read');
-    // });
 
 });
