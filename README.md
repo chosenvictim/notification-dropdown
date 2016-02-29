@@ -40,3 +40,4 @@ The server will start running at port specified in config.json and it does the f
 3. It emits the 'notification' over websocket which is then received by the client and displayed(unread by default).
 ```
 Now hit [http://localhost:4000](http://localhost:4000) and you should be good to go.
+
