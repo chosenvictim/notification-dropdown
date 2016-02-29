@@ -1,5 +1,5 @@
-# noti
-A Facebook like notification tab which gets random notifications from the server by **Push Mechanism** over Websocket.
+# Facebook like Notification Dropdown
+A Facebook like notification dropdown which gets random notifications from the server by **Push Mechanism** over Websocket.
 I have used [socket.io](https://github.com/socketio/socket.io) library on the server side for sending push notifications to the client.
 
 It has the following functionalities:-
