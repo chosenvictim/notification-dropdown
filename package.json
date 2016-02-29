@@ -1,15 +1,18 @@
 {
-  "name": "noti",
+  "name": "Facebook like Notification Dropdown",
   "version": "1.0.0",
-  "description": "Random notification generator using pull mechanism",
+  "description": "Random facebook notification generator using server side push mechanism",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "keywords": [
-    "random-notifications-tab",
-    "client-polling"
+    "facebook notification panel"
+    "random notifications generation on server",
+    "websocket push notifications",
+    "socket.io",
+    "push notifications"
   ],
   "author": "Shekhar Kumar",
   "license": "ISC",
