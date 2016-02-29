@@ -1,4 +1,7 @@
 # Facebook like Notification Dropdown
+
+![alt tag](https://raw.githubusercontent.com/shek8034/notification-dropdown/master/public/noti.png)
+
 A Facebook like notification dropdown which gets random notifications from the server by **Push Mechanism** over Websocket.
 I have used [socket.io](https://github.com/socketio/socket.io) library on the server side for sending push notifications to the client.
 
@@ -40,3 +43,4 @@ The server will start running at port specified in config.json and it does the f
 3. It emits the 'notification' over websocket which is then received by the client and displayed(unread by default).
 ```
 Now hit [http://localhost:4000](http://localhost:4000) and you should be good to go.
+
