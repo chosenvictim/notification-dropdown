@@ -1,5 +1,5 @@
 {
-  "name": "Facebook like Notification Dropdown",
+  "name": "noti",
   "version": "1.0.0",
   "description": "Random facebook notification generator using server side push mechanism",
   "main": "server.js",
@@ -8,7 +8,7 @@
     "start": "node server.js"
   },
   "keywords": [
-    "facebook notification panel"
+    "facebook notification panel",
     "random notifications generation on server",
     "websocket push notifications",
     "socket.io",
